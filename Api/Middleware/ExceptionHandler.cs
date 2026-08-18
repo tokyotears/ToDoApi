@@ -9,7 +9,7 @@ public class ExceptionHandler(RequestDelegate next, ILogger<ExceptionHandler> lo
             await _next(context);
         } catch (Exception ex) {
             context.Response.StatusCode = 500;
-            _logger.LogError(ex, "???");
+            _logger.LogError(ex, "Internal server error");
 
             await context.Response.WriteAsJsonAsync(new {
                 error = "internal_server_error",
