@@ -20,4 +20,9 @@ public class TaskService {
         var task = await taskRep.DeleteTask(id);
         return !task ? new Response("Task not found", ErrorType.NotFound) : new Response("Task deleted successfully");
     }
+
+    public async Task<Response> EditTask(TaskRepository taskRep, TaskChangeReq req, Guid id) {
+        var res = await taskRep.EditTask(id, req);
+        return res ? new Response("Changed task successfully") : new Response("No such user", ErrorType.NotFound);
+    }
 }

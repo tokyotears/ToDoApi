@@ -23,12 +23,13 @@ public class TaskRepository(AppDbContext db) {
         return true;
     }
 
-    public async Task<bool> EditTask(Guid id, TaskAddReq req) {
+    public async Task<bool> EditTask(Guid id, TaskChangeReq req) {
         var task = await GetTask(id);
         if (task is null) return false;
         if (!string.IsNullOrEmpty(req.Name)) task.Name = req.Name;
         if (!string.IsNullOrEmpty(req.Task)) task.Task = req.Task;
-        if (!string.IsNullOrEmpty(req.Status.ToString())) task.Status = req.Status;
+        if (req.Status.HasValue) task.Status = req.Status.Value;
+        await db.SaveChangesAsync();
         return true;
     }
 }

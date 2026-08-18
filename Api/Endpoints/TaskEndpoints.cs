@@ -10,13 +10,19 @@ public static class TaskEndpoints {
         app.MapGet("/", () => "This is new");
         app.MapGet("/tasks", async (TaskRepository taskRep, TaskService taskService) => {
             var res = await taskService.GetTasks(taskRep);
-            if (res.IsSuccess) return Results.Ok(res.Data);
-            return ResponseMapper.ToIRes(res);
+            return res.IsSuccess ? Results.Ok(res.Data) : ResponseMapper.ToIRes(res);
         });
         app.MapPost("/tasks", async (TaskRepository taskRep, TaskService taskService, TaskAddReq req) => {
             var res = await taskService.AddTask(taskRep, req);
-            if (res.IsSuccess) return Results.Ok(res.Message);
-            return ResponseMapper.ToIRes(res);
+            return res.IsSuccess ? Results.Ok(res.Message) : ResponseMapper.ToIRes(res);
+        });
+        app.MapDelete("/tasks/{id:guid}", async (TaskRepository taskRep, TaskService taskService, Guid id) => {
+            var res = await taskService.DeleteTask(taskRep, id);
+            return res.IsSuccess ? Results.Ok(res.Message) : ResponseMapper.ToIRes(res);
+        });
+        app.MapPatch("/tasks/{id:guid}", async (TaskRepository taskRep, TaskService taskService, TaskChangeReq req, Guid id) => {
+            var res = await taskService.EditTask(taskRep, req, id);
+            return res.IsSuccess ? Results.Ok(res.Message) : ResponseMapper.ToIRes(res);
         });
     }
 }
