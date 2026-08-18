@@ -1,7 +1,10 @@
 namespace Api.DTO;
 
 public enum ErrorType {
-    NotFound
+    NotFound,
+    UserAlreadyExists,
+    UserNotFound,
+    WrongPassword
 }
 
 public class Response(string msg, ErrorType? error = null) {
