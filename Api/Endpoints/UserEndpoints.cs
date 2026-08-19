@@ -15,9 +15,16 @@ public static class UserEndpoints {
             var res = await userService.Register(userRep, passwordService, req);
             return res.IsSuccess ? Results.Ok(res.Message) : ResponseMapper.ToIRes(res);
         });
-        app.MapPost("/login", async (UserRepository userRep, UserService userService, PasswordService passwordService, UserAuthReq req) => {
+        app.MapPost("/login", async (HttpContext context, UserRepository userRep, UserService userService, PasswordService passwordService, JwtService jwtService, UserAuthReq req) => {
             var res = await userService.Login(userRep, passwordService, req);
-            return res.IsSuccess ? Results.Ok(res.Message) : ResponseMapper.ToIRes(res);
+            if (res.IsSuccess) {
+                var token = jwtService.CreateJwtToken(res.Data!);
+                context.Response.Cookies.Append("jwt_token", token, new CookieOptions {
+                   HttpOnly = true,
+                   Secure = false,
+                   SameSite = SameSiteMode.Strict
+                });
+            }
         });
     }
 }

@@ -16,9 +16,9 @@ public class UserService {
         return res ? new Response("User added successfully") : new Response("User already exists", ErrorType.UserAlreadyExists);
     }
 
-    public async Task<Response> Login(UserRepository userRep, PasswordService passwordService, UserAuthReq req) {
+    public async Task<Response<User>> Login(UserRepository userRep, PasswordService passwordService, UserAuthReq req) {
         var user = await userRep.GetUser(req.Name);
-        if (user is null) return new Response("User doesn't exist", ErrorType.UserNotFound);
-        return passwordService.Verify(req.Password, user.HashedPassword) ? new Response("User logged in successfully") : new Response("Wrong password", ErrorType.WrongPassword);
+        if (user is null) return new Response<User>(null, "User doesn't exist", ErrorType.UserNotFound);
+        return passwordService.Verify(req.Password, user.HashedPassword) ? new Response<User>(user, "User logged in successfully") : new Response<User>(null, "Wrong password", ErrorType.WrongPassword);
     }
 }

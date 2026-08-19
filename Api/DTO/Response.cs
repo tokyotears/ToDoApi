@@ -13,6 +13,6 @@ public class Response(string msg, ErrorType? error = null) {
     public bool IsSuccess => Error is null;
 }
 
-public class Response<T>(T data, string msg, ErrorType? error = null) : Response(msg, error) {
-   public T Data = data;
+public class Response<T>(T? data, string msg, ErrorType? error = null) : Response(msg, error) {
+   public T? Data = data;
 }

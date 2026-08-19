@@ -3,4 +3,5 @@ bin/
 obj/
 Migrations/
 *.db
+*.user
 .DS_Store
